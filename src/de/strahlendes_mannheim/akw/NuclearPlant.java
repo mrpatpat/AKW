@@ -1,3 +1,4 @@
+package de.strahlendes_mannheim.akw;
 /**
  * Das Atomkraftwerk.
  * @author Adrian, Felix

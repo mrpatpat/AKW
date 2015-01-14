@@ -1,3 +1,4 @@
+package de.strahlendes_mannheim.akw;
 /**
  * Abstrakte Klasse für einen Wärmespeicher z.B. Wasser 
  * @author Adrian, Felix

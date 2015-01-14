@@ -1,3 +1,4 @@
+package de.strahlendes_mannheim.akw;
 /**
  * Leitwarte. Überwacht das System und gibt Informationen aus.
  * @author Adrian. Felix
