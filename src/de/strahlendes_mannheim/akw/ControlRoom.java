@@ -40,7 +40,7 @@ public class ControlRoom {
 	 * Druckt die aktuellen Informationen.
 	 */
 	private synchronized void print() {
-		System.out.println("Temperatur Reaktor: "+reactorTemp+", Temperatur Rüuckfluss in Rhein "+riverTemp);
+		System.out.println("Temperatur Reaktor: "+reactorTemp+", Temperatur Rückfluss in Rhein "+riverTemp);
 	}
 
 	/**

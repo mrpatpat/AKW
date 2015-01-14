@@ -1,6 +1,12 @@
 package de.strahlendes_mannheim.akw;
+
+import de.strahlendes_mannheim.akw.configs.Config;
+import de.strahlendes_mannheim.akw.configs.FailingConfig;
+import de.strahlendes_mannheim.akw.configs.WorkingConfig;
+
 /**
  * Das Atomkraftwerk.
+ * 
  * @author Adrian, Felix
  *
  */
@@ -9,64 +15,65 @@ public class NuclearPlant {
 	/**
 	 * Starttemperatur des Reaktors.
 	 */
-	private static final int REACTOR_START_TEMP = 10;
-	
+	private int REACTOR_START_TEMP = 10;
+
 	/**
 	 * Erwärmungskoeffizient des Reaktors.
 	 */
-	private static final int REACTOR_HEAT_COEFFICIENT = 42;
-	
+	private int REACTOR_HEAT_COEFFICIENT = 42;
+
 	/**
 	 * Kritische Temperatur des Reaktors.
 	 */
-	private static final int REACTOR_CRITICAL_TEMP = 2878;
+	private int REACTOR_CRITICAL_TEMP = 2878;
 
 	/**
 	 * Starttemperatur des Wassers.
 	 */
-	private static final int WATER_START_TEMP = 10;
-	
+	private int WATER_START_TEMP = 10;
+
 	/**
 	 * Volumen eines Wasserelements.
 	 */
-	private static final int WATER_VOLUME = 100;
-	
+	private int WATER_VOLUME = 100;
+
 	/**
 	 * Größe des Wasserkreislaufes.
 	 */
-	private static final int WATER_CYCLE_SIZE = 12;
-	
+	private int WATER_CYCLE_SIZE = 12;
+
 	/**
 	 * Position des Reaktorwärmetauschers im Kreislauf.
 	 */
-	private static final int REACTOR_POS = 0;
-	
+	private int REACTOR_POS = 0;
+
 	/**
 	 * Position des Flusswärmetauschers im Kreislauf.
 	 */
-	private static final int RIVER_POS = 6;
+	private int RIVER_POS = 6;
 
 	/**
 	 * Starttemperatur des Flusses.
 	 */
-	private static final int RIVER_START_TEMP = 10;
+	private int RIVER_START_TEMP = 10;
 
 	/**
 	 * Pumpleistung.
 	 */
-	private static final int PUMP_PERFORMANCE = 100;
-	
+	private int PUMP_PERFORMANCE = 100;
+
 	/**
 	 * Pumpkoeffizient.
 	 */
-	private static final int PUMP_COEFFICIENT = 1;
-	
+	private int PUMP_COEFFICIENT = 1;
+
 	/**
-	 * Gemeinsame Lock für die Threads, damit nicht gleichzeitig gepumpt und erwärmt wird.
+	 * Gemeinsame Lock für die Threads, damit nicht gleichzeitig gepumpt und
+	 * erwärmt wird.
 	 */
 	public static final Object LOCK = new Object();
-	
-	//Elemente des AKW
+
+	// Elemente des AKW
 	private ControlRoom controlRoom;
 	private Reactor reactor;
 	private River river;
@@ -75,22 +82,49 @@ public class NuclearPlant {
 	private HeatExchanger cycleToRiver;
 	private Pump pump;
 
-	//Threads
+	// Threads
 	private Thread reactorT;
 	private Thread pumpT;
 
 	/**
 	 * Startpunkt
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new NuclearPlant();
+		System.out.println("Simulation (Fehlerfrei):");
+		new NuclearPlant(new WorkingConfig());
+		System.out.println("Simulation (Überhitzung):");
+		new NuclearPlant(new FailingConfig());
 	}
 
 	/**
 	 * Konstruktor.
 	 */
 	public NuclearPlant() {
+		init();
+		run();
+	}
+
+	/**
+	 * Konstruktor mit Konfiguration.
+	 */
+	public NuclearPlant(Config c) {
+
+		if (c != null) {
+			REACTOR_START_TEMP = c.getReactorStartTemp();
+			REACTOR_HEAT_COEFFICIENT = c.getReactorHeatCoefficient();
+			REACTOR_CRITICAL_TEMP = c.getReactorCriticalTemp();
+			WATER_START_TEMP = c.getWaterStartTemp();
+			WATER_VOLUME = c.getWaterVolume();
+			WATER_CYCLE_SIZE = c.getWaterCycleSize();
+			REACTOR_POS = c.getReactorPos();
+			RIVER_POS = c.getRiverPos();
+			RIVER_START_TEMP = c.getRiverStartTemp();
+			PUMP_PERFORMANCE = c.getPumpPerformance();
+			PUMP_COEFFICIENT = c.getPumpCoefficient();
+		}
+
 		init();
 		run();
 	}
@@ -123,9 +157,6 @@ public class NuclearPlant {
 		// unterbricht die Threads
 		pumpT.interrupt();
 		reactorT.interrupt();
-
-		// beendet die VM
-		System.exit(0);
 
 	}
 
